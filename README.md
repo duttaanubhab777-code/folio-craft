@@ -4,11 +4,11 @@
 
 ### Build a portfolio that feels like you.
 
-A modern portfolio maker foundation built with **Next.js App Router**, **TypeScript**, and **Tailwind CSS**.
+A modern portfolio maker built with **Next.js App Router**, **JavaScript**, and **plain CSS**.
 
 [![Next.js](https://img.shields.io/badge/Next.js-16.4.6-black?logo=next.js)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-Strict-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![JavaScript](https://img.shields.io/badge/JavaScript-ES2022-F7DF1E?logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![CSS](https://img.shields.io/badge/Styling-Plain_CSS-1572B6?logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
 [![Deploy with Vercel](https://img.shields.io/badge/Deploy-Vercel-black?logo=vercel)](https://vercel.com/)
 
 </div>
@@ -19,7 +19,7 @@ A modern portfolio maker foundation built with **Next.js App Router**, **TypeScr
 
 Folio Craft is a portfolio-builder product. The goal is to let people create an account, add profile details and projects, choose a design, preview the result, and publish a shareable portfolio.
 
-This repository currently contains the **application foundation**: Next.js configuration, a feature-oriented folder structure, shared utilities, portfolio domain types and validation, route-level UI states, and a starter landing page.
+This repository currently contains the **application foundation**: Next.js configuration, a feature-oriented folder structure, shared utilities, portfolio validation, route-level UI states, and a starter landing page.
 
 **Not implemented yet:** authentication, database persistence, portfolio editor, template gallery, image uploads, and public portfolio publishing. These are planned product phases, not existing features.
 
@@ -27,16 +27,15 @@ This repository currently contains the **application foundation**: Next.js confi
 
 | Area | Technology | Responsibility |
 |---|---|---|
-| Framework | Next.js 16 App Router | Routing, rendering, server capabilities |
-| Language | TypeScript | Type safety |
+| Framework | Next.js App Router | Routing, rendering, server capabilities |
+| Language | JavaScript (ES modules) | Application logic |
 | UI | React | Component-based interfaces |
-| Styling | Tailwind CSS v4 | Responsive design |
+| Styling | Plain CSS | Responsive styling and design system |
 | Icons | Lucide React | Interface icons |
 | Validation | Zod | Runtime input validation |
-| Utilities | clsx + tailwind-merge | Conditional class composition |
 | Hosting | Vercel | Deployment and preview environments |
 
-The project uses a stable Next.js release, not a canary build. Check the official documentation before upgrading framework major versions.
+**Project decision:** This repository intentionally does not use TypeScript or Tailwind CSS. Components use JavaScript files (`.js` / `.jsx`) and styling lives in regular CSS files.
 
 ## 3. First-time setup
 
@@ -90,19 +89,16 @@ The starter only needs `NEXT_PUBLIC_APP_URL`. Keep private credentials in server
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). Edit `src/app/page.tsx`, save, and Next.js will refresh the page.
+Open [http://localhost:3000](http://localhost:3000). Edit `src/app/page.js`, save, and Next.js will refresh the page.
 
 ### Step 5 — Run quality checks
 
-Run these before pushing changes:
-
 ```bash
 npm run lint
-npm run typecheck
 npm run build
 ```
 
-All checks should pass before a production deployment.
+Both commands should pass before a production deployment.
 
 ## 4. Project architecture
 
@@ -113,12 +109,12 @@ folio-craft/
 ├── public/                              # Static assets
 ├── src/
 │   ├── app/                             # Next.js App Router
-│   │   ├── layout.tsx                   # Root layout and metadata
-│   │   ├── page.tsx                     # Home route
-│   │   ├── globals.css                  # Global styles and Tailwind
-│   │   ├── loading.tsx                  # Loading UI
-│   │   ├── error.tsx                    # Route error boundary
-│   │   └── not-found.tsx                # 404 page
+│   │   ├── layout.js                    # Root layout and metadata
+│   │   ├── page.js                      # Home route
+│   │   ├── globals.css                  # Global styles and design tokens
+│   │   ├── loading.js                   # Loading UI
+│   │   ├── error.js                     # Route error boundary
+│   │   └── not-found.js                 # 404 page
 │   ├── components/
 │   │   ├── ui/                          # Reusable design primitives
 │   │   ├── layout/                      # Header, footer, navigation
@@ -129,20 +125,18 @@ folio-craft/
 │   │       ├── hooks/                   # Feature client hooks
 │   │       ├── schemas/                 # Zod validation
 │   │       ├── services/                # Business use cases
-│   │       ├── types/                   # Domain contracts
+│   │       ├── types/                   # JSDoc domain contracts
 │   │       └── utils/                   # Feature-only helpers
 │   ├── lib/
 │   │   ├── auth/                        # Authentication helpers (future)
 │   │   ├── db/                          # Database access (future)
 │   │   ├── security/                    # Security helpers (future)
-│   │   └── utils/                       # Framework-independent utilities
+│   │   └── utils/                       # Shared utilities
 │   └── config/                          # Application configuration
 ├── .env.example
 ├── eslint.config.mjs
-├── next.config.ts
+├── next.config.js
 ├── package.json
-├── postcss.config.mjs
-├── tsconfig.json
 └── README.md
 ```
 
@@ -168,27 +162,27 @@ Next.js uses folders and special files inside `src/app` to define URLs.
 
 | File path | URL |
 |---|---|
-| `src/app/page.tsx` | `/` |
-| `src/app/dashboard/page.tsx` | `/dashboard` |
-| `src/app/dashboard/settings/page.tsx` | `/dashboard/settings` |
-| `src/app/portfolio/[slug]/page.tsx` | `/portfolio/:slug` |
+| `src/app/page.js` | `/` |
+| `src/app/dashboard/page.js` | `/dashboard` |
+| `src/app/dashboard/settings/page.js` | `/dashboard/settings` |
+| `src/app/portfolio/[slug]/page.js` | `/portfolio/:slug` |
 
-A folder does not become a page until it contains a route file such as `page.tsx`.
+A folder does not become a page until it contains a route file such as `page.js`.
 
 ### Server Components and Client Components
 
 **Server Components are the default.** Use them for pages, data fetching, and UI that does not need browser interaction.
 
-Add `"use client"` only when a component needs React state, event handlers, effects, or browser APIs.
+Add the `"use client"` directive only when a component needs React state, event handlers, effects, or browser APIs.
 
-```tsx
+```jsx
 // Server Component — no directive needed
 export default async function Page() {
   return <main>Portfolio dashboard</main>;
 }
 ```
 
-```tsx
+```jsx
 "use client";
 
 import { useState } from "react";
@@ -201,7 +195,21 @@ export function Counter() {
 
 Keep client components small. Do not convert the entire application into a Client Component because one small control needs interaction.
 
-## 6. How the application layers communicate
+### JavaScript without TypeScript
+
+Use modern JavaScript and ES modules. For complex domain objects, add JSDoc comments so editors can still provide useful autocomplete and inline documentation without introducing a TypeScript build.
+
+## 6. Styling with plain CSS
+
+There is no Tailwind dependency or utility-class build step. Keep styles in CSS files:
+
+- Global tokens and resets: `src/app/globals.css`
+- Feature-specific styles: colocated files such as `portfolio-editor.css`
+- Reusable component styles: component-level CSS files imported by the component or its route.
+
+Prefer CSS variables for shared colors, spacing, radii, and typography. Use responsive media queries and respect `prefers-reduced-motion`.
+
+## 7. How application layers communicate
 
 A typical portfolio edit operation should follow this direction:
 
@@ -225,31 +233,29 @@ Database
 
 The browser is never the authority for access control. Verify portfolio ownership on the server for every private read or write operation.
 
-## 7. Important files already included
+## 8. Important files already included
 
 | File | Responsibility |
 |---|---|
-| `src/app/layout.tsx` | Root layout, SEO metadata, viewport |
-| `src/app/page.tsx` | Responsive starter landing page |
-| `src/app/globals.css` | Tailwind v4 and global defaults |
-| `src/app/error.tsx` | Route error boundary |
-| `src/app/loading.tsx` | Loading state |
-| `src/app/not-found.tsx` | 404 state |
-| `src/features/portfolio/types/portfolio.ts` | Portfolio domain contracts |
-| `src/features/portfolio/schemas/portfolio.schema.ts` | Runtime input validation |
-| `src/lib/utils/cn.ts` | Merge conditional Tailwind classes |
-| `src/config/site.ts` | Central application metadata |
+| `src/app/layout.js` | Root layout, SEO metadata, viewport |
+| `src/app/page.js` | Responsive starter landing page |
+| `src/app/globals.css` | Plain CSS design tokens and responsive styles |
+| `src/app/error.js` | Route error boundary |
+| `src/app/loading.js` | Loading state |
+| `src/app/not-found.js` | 404 state |
+| `src/features/portfolio/types/portfolio.js` | JSDoc domain contracts |
+| `src/features/portfolio/schemas/portfolio.schema.js` | Runtime input validation |
+| `src/lib/utils/cn.js` | Small class-name helper |
+| `src/config/site.js` | Central application metadata |
 
-## 8. Product roadmap
-
-Build one complete user journey at a time. Avoid integrating every service before the core experience is designed.
+## 9. Product roadmap
 
 ### Phase 1 — Foundation
-- [x] Next.js App Router + TypeScript
-- [x] Tailwind CSS and shared utility setup
+- [x] Next.js App Router with JavaScript
+- [x] Plain CSS foundation and responsive landing page
 - [x] Feature-oriented architecture
-- [x] Portfolio domain types and validation starter
-- [x] Landing page and route-level UI states
+- [x] Portfolio domain documentation and Zod validation
+- [x] Loading, error, and 404 route states
 - [ ] Shared design system (buttons, inputs, dialogs, toasts)
 - [ ] Responsive application shell
 
@@ -277,7 +283,7 @@ Build one complete user journey at a time. Avoid integrating every service befor
 - [ ] Accessibility and performance review
 - [ ] CI checks and production deployment
 
-## 9. Security and data principles
+## 10. Security and data principles
 
 1. **Validate at boundaries.** Validate form submissions, route parameters, and external payloads with Zod.
 2. **Authorize on the server.** A user may only edit portfolios they own.
@@ -288,9 +294,7 @@ Build one complete user journey at a time. Avoid integrating every service befor
 7. **Add rate limits** to authentication, uploads, and write endpoints before public launch.
 8. **Use least privilege.** Give database and storage credentials only the permissions they require.
 
-Do not add authentication or a database just to make the architecture look advanced. Introduce each system when the product phase needs it.
-
-## 10. Deploy to Vercel
+## 11. Deploy to Vercel
 
 1. Push your project to GitHub.
 2. Sign in to [Vercel](https://vercel.com/).
@@ -304,7 +308,7 @@ For future updates, push commits to the connected branch. Vercel can create prev
 
 **Never commit secrets to GitHub.** Configure production values in Vercel's Environment Variables settings.
 
-## 11. Useful commands
+## 12. Useful commands
 
 | Command | Purpose |
 |---|---|
@@ -312,31 +316,17 @@ For future updates, push commits to the connected branch. Vercel can create prev
 | `npm run dev` | Start local development |
 | `npm run lint` | Check code quality |
 | `npm run lint:fix` | Fix supported lint issues |
-| `npm run typecheck` | Run TypeScript checks |
 | `npm run build` | Create a production build |
 | `npm run start` | Run the production server locally |
-
-## 12. Development conventions
-
-- Use TypeScript; avoid `any`.
-- Prefer named exports for reusable components and utilities.
-- Keep route components focused on composition.
-- Keep business rules out of UI components.
-- Use Server Components by default.
-- Use semantic HTML and accessible labels.
-- Give components one clear responsibility.
-- Handle loading, empty, success, and error states.
-- Do not commit generated folders, local environment files, or secrets.
-- Make small commits with descriptive messages.
 
 ## 13. Learning path for your first Next.js project
 
 Learn these concepts in order while building Folio Craft:
 
-1. React components, props, state, and events.
-2. App Router: pages, layouts, and navigation.
-3. Server Components vs Client Components.
-4. TypeScript interfaces, types, and generics.
+1. JavaScript fundamentals, ES modules, and async/await.
+2. React components, props, state, and events.
+3. App Router: pages, layouts, and navigation.
+4. Server Components vs Client Components.
 5. Forms and Zod validation.
 6. Server Actions and Route Handlers.
 7. Authentication and authorization.
@@ -347,9 +337,9 @@ Learn these concepts in order while building Folio Craft:
 
 - [Next.js Learn](https://nextjs.org/learn)
 - [Next.js App Router documentation](https://nextjs.org/docs/app)
-- [Next.js installation guide](https://nextjs.org/docs/app/getting-started/installation)
-- [TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/intro.html)
-- [Tailwind CSS documentation](https://tailwindcss.com/docs)
+- [React documentation](https://react.dev/learn)
+- [JavaScript Guide](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide)
+- [CSS documentation](https://developer.mozilla.org/en-US/docs/Web/CSS)
 
 ---
 
@@ -357,6 +347,6 @@ Learn these concepts in order while building Folio Craft:
 
 **Folio Craft** · A portfolio should tell your story, not just list your work.
 
-Built with care using Next.js.
+Built with care using Next.js, JavaScript, and CSS.
 
 </div>

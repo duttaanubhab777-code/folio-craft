@@ -1,10 +1,8 @@
-import type { Metadata, Viewport } from "next";
-import type { ReactNode } from "react";
 import "./globals.css";
 
-const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
-export const metadata: Metadata = {
+export const metadata = {
   metadataBase: new URL(appUrl),
   title: {
     default: "Folio Craft — Build a portfolio that feels like you",
@@ -21,13 +19,13 @@ export const metadata: Metadata = {
   }
 };
 
-export const viewport: Viewport = {
+export const viewport = {
   width: "device-width",
   initialScale: 1,
   themeColor: "#09090b"
 };
 
-export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
+export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>{children}</body>

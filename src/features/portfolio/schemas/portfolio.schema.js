@@ -24,5 +24,3 @@ export const portfolioProfileSchema = z.object({
   links: z.array(portfolioLinkSchema).max(12),
   projects: z.array(portfolioProjectSchema).max(50)
 });
-
-export type PortfolioProfileInput = z.infer<typeof portfolioProfileSchema>;
